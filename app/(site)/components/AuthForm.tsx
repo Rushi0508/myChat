@@ -1,16 +1,18 @@
 'use client'
-
+import axios from 'axios'
 import Button from "@/app/components/Button";
 import Input from "@/app/components/Input";
 import { useCallback, useState } from "react";
 import { SubmitHandler,FieldValues, useForm } from "react-hook-form";
 import AuthSocialButton from "./AuthSocialButton";
 import {BsGithub, BsGoogle} from 'react-icons/bs'
+import {toast} from 'react-hot-toast'
+import {signIn} from 'next-auth/react'
 
 const AuthForm = () => {
     type Variant = 'LOGIN' | 'REGISTER';
     const [variant,setVariant] = useState<Variant>('LOGIN')
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const toggleVariant = useCallback(()=>{
         if(variant==='LOGIN'){
@@ -34,20 +36,43 @@ const AuthForm = () => {
     });
 
     const onsubmit: SubmitHandler<FieldValues> = (data)=>{
-        setLoading(true);
+        setIsLoading(true);
 
         if(variant==='REGISTER'){
-            // AXIOS REGISTER
+            axios.post('/api/register', data)
+            .catch(()=>toast.error('Something went wrong!'))
+            .finally(()=>setIsLoading(false))
         }
         if(variant==='LOGIN'){
-            // NEXTAUTH SIGNIN
+            signIn('credentials', {
+                ...data,
+                redirect: false
+            })
+            .then((callback)=>{
+                if(callback?.error){
+                    toast.error('Invalid Credentials');
+                }
+                if(callback?.ok && !callback?.error){
+                    toast.success('Logged in!')
+                }
+            })
+            .finally(()=>setIsLoading(false));
         }
     }
 
     const socialAction = (action: string)=>{
-        setLoading(true);
+        setIsLoading(true);
 
-        // NextAuth Social SignIN
+        signIn(action, {redirect: false})
+        .then((callback)=>{
+            if(callback?.error){
+                toast.error('Invalid Credentials');
+            }
+            if(callback?.ok && !callback?.error){
+                toast.success('Logged in!')
+            }
+        })
+        .finally(()=>setIsLoading(false));
     }
 
   return ( 

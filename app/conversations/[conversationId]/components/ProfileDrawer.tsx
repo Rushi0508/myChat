@@ -11,7 +11,7 @@ import useOtherUser from '@/app/hooks/useOtherUser';
 
 import Avatar from '@/app/components/Avatar';
 // import AvatarGroup from '@/app/components/AvatarGroup';
-// import ConfirmModal from './ConfirmModal';
+import ConfirmModal from './ConfirmModal';
 
 interface ProfileDrawerProps {
   isOpen: boolean;
@@ -26,9 +26,8 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   onClose,
   data,
 }) => {
-//   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const otherUser = useOtherUser(data);
-  
   const joinedDate = useMemo(() => {
     return format(new Date(otherUser.createdAt), 'PP');
   }, [otherUser.createdAt]);
@@ -50,10 +49,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 
   return (
     <>
-      {/* <ConfirmModal 
+      <ConfirmModal 
         isOpen={confirmOpen} 
         onClose={() => setConfirmOpen(false)}
-      /> */}
+      />
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={onClose}>
           <Transition.Child
@@ -108,7 +107,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                             {statusText}
                           </div>
                           <div className="flex gap-10 my-8">
-                            <div onClick={() => {}} className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75">
+                            <div onClick={() => setConfirmOpen(true)} className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75">
                               <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center">
                                 <IoTrash size={20} />
                               </div>

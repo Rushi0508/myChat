@@ -7,7 +7,7 @@ import {format} from 'date-fns'
 import { useSession } from "next-auth/react";
 import clsx from "clsx";
 import { FullConversationType } from "@/app/types";
-import userOtherUser from "@/app/hooks/useOtherUser";
+import useOtherUser from "@/app/hooks/useOtherUser";
 import Avatar from "@/app/components/Avatar";
 import AvatarGroup from "@/app/components/AvatarGroup";
 
@@ -19,7 +19,7 @@ interface ConversationBoxProps{
 const ConversationBox: React.FC<ConversationBoxProps> = ({
     data,selected
 }) => {
-    const otherUser = userOtherUser(data);
+    const otherUser = useOtherUser(data);
     const session = useSession();
     const router = useRouter();
 
